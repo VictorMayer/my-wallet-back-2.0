@@ -12,7 +12,7 @@ async function register (req, res) {
     const hashedPassword = bcrypt.hashSync(password, 10);
     try {
         const existentEmail = await connection.query(`SELECT * FROM users WHERE email = $1`, [email]);
-        if (existentEmail.rows[0]?.length) return res.status(409).send("This email has already been used!");
+        if (existentEmail.rows.length > 0) return res.status(409).send("This email has already been used!");
         await connection.query(`INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`, [name, email, hashedPassword]);
         res.sendStatus(201);
     } catch (error) {
